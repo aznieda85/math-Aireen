@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Math Fun - Darjah 3</title>
+<style>
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin:0; padding:0; font-family:'Comic Sans MS','Chalkboard SE','Marker Felt',sans-serif;
+  background: radial-gradient(circle at 10% 20%, #ffd3a5 0%, transparent 40%),
+    radial-gradient(circle at 90% 10%, #fd9853 0%, transparent 40%),
+    radial-gradient(circle at 50% 80%, #a1c4fd 0%, transparent 45%),
+    linear-gradient(135deg, #fceabb 0%, #f8b500 100%);
+  background-attachment: fixed; min-height:100vh; -webkit-user-select:none; user-select:none; overscroll-behavior:none; }
+body { padding:16px; }
+.header { background:white; border-radius:24px; padding:18px 22px; text-align:center;
+  box-shadow:0 8px 24px rgba(0,0,0,0.12); margin-bottom:18px; display:flex;
+  justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
+h1 { margin:0; font-size:34px;
+  background: linear-gradient(90deg, #ff5e62, #ff9966, #f8b500, #43cea2, #185a9d);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.date-box { font-size:18px; color:#555; background:#fff7e0; padding:8px 14px; border-radius:14px; border:2px dashed #ffb347; }
+.score-box { font-size:20px; color:white; background:linear-gradient(135deg,#43cea2,#185a9d);
+  padding:8px 18px; border-radius:14px; font-weight:bold; box-shadow:0 4px 10px rgba(0,0,0,0.15); }
+.section { background:rgba(255,255,255,0.95); border-radius:24px; padding:18px; margin-bottom:18px; box-shadow:0 8px 24px rgba(0,0,0,0.12); }
+.section h2 { margin:0 0 14px 0; display:flex; align-items:center; gap:12px; font-size:26px; }
+.section h2 .emoji { font-size:32px; background:white; border-radius:50%; width:50px; height:50px;
+  display:inline-flex; align-items:center; justify-content:center; box-shadow:0 3px 8px rgba(0,0,0,0.15); }
+.add { border-left:8px solid #4CAF50; }
+.minus { border-left:8px solid #2196F3; }
+.times { border-left:8px solid #ff9800; }
+.divide { border-left:8px solid #9c27b0; }
+.wordprob { border-left:8px solid #e91e63; }
+.add h2 { color:#2e7d32; }
+.minus h2 { color:#1565c0; }
+.times h2 { color:#ef6c00; }
+.divide h2 { color:#6a1b9a; }
+.wordprob h2 { color:#ad1457; }
+.sub-h { margin:20px 0 10px; padding:8px 16px; border-radius:12px; display:inline-block; font-size:20px; }
+.add-sub { background:#e8f5e9; color:#2e7d32; }
+.minus-sub { background:#e3f2fd; color:#1565c0; }
+.times-sub { background:#fff3e0; color:#ef6c00; }
+.divide-sub { background:#f3e5f5; color:#6a1b9a; }
+.grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(220px,1fr)); gap:14px; }
+.wgrid { display:grid; grid-template-columns:repeat(auto-fill, minmax(320px,1fr)); gap:14px; }
+.q { background:#fffdf7; border:3px solid #ffe6a7; border-radius:18px; padding:10px 10px 8px; position:relative; transition:transform 0.15s; }
+.q.wq { background:#fffaf5; border-color:#ffd8b3; padding:14px; }
+.q.correct { border-color:#4CAF50; background:#eaffea; }
+.q.wrong { border-color:#e53935; background:#fff0f0; }
+.q-num { position:absolute; top:-10px; left:-8px; background:linear-gradient(135deg,#ff5e62,#ff9966);
+  color:white; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:14px; box-shadow:0 2px 6px rgba(0,0,0,0.2); }
+.q.wq .q-num { background:linear-gradient(135deg,#e91e63,#f06292); }
+.q-text { font-size:24px; font-weight:bold; text-align:center; color:#333; margin:4px 0 8px; letter-spacing:1px; }
+.wq-text { font-size:16px; line-height:1.45; color:#333; margin:6px 0 10px; padding-left:4px; font-weight:600; }
+.canvas-wrap { position:relative; }
+canvas { width:100%; height:90px; background:white; border:2px dashed #bbb; border-radius:12px; touch-action:none; display:block; }
+.clear-btn { position:absolute; top:4px; right:4px; background:#ffcdd2; color:#c62828; border:none;
+  border-radius:50%; width:26px; height:26px; font-size:14px; font-weight:bold; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; padding:0; }
+.answer-row { display:none; margin-top:8px; text-align:center; }
+.q.checked .answer-row { display:block; }
+.correct-ans { display:inline-block; background:#e8f5e9; color:#2e7d32; padding:4px 12px; border-radius:10px; font-weight:bold; font-size:18px; border:2px solid #4CAF50; }
+.mark-buttons { display:flex; justify-content:center; gap:8px; margin-top:8px; }
+.mark-btn { width:44px; height:44px; border-radius:50%; border:2px solid #ddd; background:white; font-size:22px; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; transition:transform 0.1s; }
+.mark-btn:active { transform:scale(0.9); }
+.mark-btn.tick.active { background:#4CAF50; color:white; border-color:#2e7d32; }
+.mark-btn.cross.active { background:#e53935; color:white; border-color:#b71c1c; }
+.redo-wrap { display:none; margin-top:8px; }
+.q.wrong .redo-wrap { display:block; }
+.redo-label { font-size:13px; color:#c62828; font-weight:bold; margin-bottom:4px; text-align:center; }
+.redo-canvas { height:70px; border-color:#e53935; }
+.controls { text-align:center; padding:20px 0 40px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+.btn { background:linear-gradient(135deg,#667eea,#764ba2); color:white; border:none; padding:16px 32px;
+  font-size:20px; font-weight:bold; border-radius:30px; cursor:pointer; box-shadow:0 6px 16px rgba(0,0,0,0.2); font-family:inherit; }
+.btn:active { transform:translateY(2px); }
+.btn.check { background:linear-gradient(135deg,#ff5e62,#ff9966); }
+.btn.reset { background:linear-gradient(135deg,#757575,#424242); }
+.celebrate { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; z-index:100; padding:20px; }
+.celebrate.show { display:flex; }
+.celebrate-box { background:white; padding:30px 40px; border-radius:24px; text-align:center; max-width:400px; animation:pop 0.4s ease; }
+@keyframes pop { 0%{transform:scale(0.5); opacity:0;} 100%{transform:scale(1); opacity:1;} }
+.celebrate-box h2 { font-size:32px; margin:0 0 10px; color:#ff5e62; }
+.celebrate-box .stars { font-size:40px; margin:10px 0; }
+.celebrate-box p { font-size:20px; color:#555; margin:10px 0 20px; }
+@media (max-width:500px) {
+  h1 { font-size:26px; }
+  .grid { grid-template-columns:repeat(auto-fill, minmax(160px,1fr)); }
+  .wgrid { grid-template-columns:1fr; }
+  .q-text { font-size:20px; }
+  canvas { height:70px; }
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>🌟 Math Fun 🌟</h1>
+  <div class="date-box" id="dateBox">Loading...</div>
+  <div class="score-box" id="scoreBox">Score: 0 / 52</div>
+</div>
+<div class="section add"><h2><span class="emoji">➕</span> Tambah (Addition)</h2><div class="grid" id="addGrid"></div></div>
+<div class="section minus"><h2><span class="emoji">➖</span> Tolak (Subtraction)</h2><div class="grid" id="minusGrid"></div></div>
+<div class="section times"><h2><span class="emoji">✖️</span> Darab (Multiplication)</h2><div class="grid" id="timesGrid"></div></div>
+<div class="section divide"><h2><span class="emoji">➗</span> Bahagi (Division)</h2><div class="grid" id="divideGrid"></div></div>
+<div class="section wordprob">
+  <h2><span class="emoji">📖</span> Soalan Ayat (Word Problems)</h2>
+  <div class="wgrid" id="wAllGrid"></div>
+</div>
+<div class="controls">
+  <button class="btn check" onclick="showAnswers()">✅ Show Answers</button>
+  <button class="btn reset" onclick="clearAll()">🧹 Clear Writing</button>
+</div>
+<div class="celebrate" id="celebrate" onclick="this.classList.remove('show')">
+  <div class="celebrate-box">
+    <div class="stars">⭐⭐⭐</div>
+    <h2 id="celebrateTitle">Great Job!</h2>
+    <p id="celebrateMsg">You finished today's practice!</p>
+    <button class="btn" onclick="document.getElementById('celebrate').classList.remove('show')">Close</button>
+  </div>
+</div>
+<script>
+function getDailySeed() {
+  const d = new Date();
+  return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+}
+let seed = getDailySeed();
+function rand() {
+  seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+  let t = seed;
+  t = Math.imul(t ^ t >>> 15, t | 1);
+  t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+  return ((t ^ t >>> 14) >>> 0) / 4294967296;
+}
+function ri(min, max) { return Math.floor(rand() * (max - min + 1)) + min; }
+
+function genAdd() {
+  const r = rand(); let a, b;
+  if (r < 0.35) { a = ri(150, 899); b = ri(100, 500); }
+  else if (r < 0.7) { a = ri(1200, 8999); b = ri(150, 999); }
+  else { a = ri(1000, 5000); b = ri(1000, 4000); }
+  return { text: a + ' + ' + b, ans: a + b };
+}
+function genMinus() {
+  const r = rand(); let a, b;
+  if (r < 0.35) { a = ri(300, 999); b = ri(80, a - 20); }
+  else if (r < 0.7) { a = ri(1500, 9500); b = ri(150, 999); }
+  else { a = ri(3000, 9999); b = ri(1000, a - 100); }
+  return { text: a + ' − ' + b, ans: a - b };
+}
+function genTimes() {
+  const r = rand(); let a, b;
+  if (r < 0.2) { a = ri(2, 9); b = ri(2, 9); }
+  else if (r < 0.45) { a = ri(11, 40); b = ri(2, 9); }
+  else if (r < 0.75) { a = ri(120, 450); b = ri(3, 8); }
+  else { a = ri(1100, 3500); b = ri(2, 7); }
+  return { text: a + ' × ' + b, ans: a * b };
+}
+function genDivide() {
+  const r = rand(); const b = ri(2, 9); let q;
+  if (r < 0.25) { q = ri(2, 12); }
+  else if (r < 0.55) { q = ri(15, 110); }
+  else if (r < 0.85) { q = ri(150, 900); }
+  else { q = ri(500, 1400); }
+  const a = b * q;
+  return { text: a + ' ÷ ' + b, ans: q };
+}
+
+const wordProbs = {
+  add: [
+    { t: "Ali ada {a} biji guli. Abu memberi {b} biji guli lagi kepadanya. Berapa jumlah guli Ali sekarang?",
+      gen: () => ({ a: ri(1200, 4500), b: ri(500, 2500) }) },
+    { t: "Sebuah kedai menjual {a} buah buku pada bulan Januari dan {b} buah buku pada bulan Februari. Berapa jumlah buku dijual?",
+      gen: () => ({ a: ri(1500, 4000), b: ri(1200, 3500) }) },
+    { t: "Puan Aminah membeli {a} gram tepung dan {b} gram gula. Berapakah jumlah berat kedua-dua bahan?",
+      gen: () => ({ a: ri(1800, 3500), b: ri(700, 2000) }) },
+    { t: "Encik Rahim mengumpul {a} keping setem. Adiknya memberi {b} keping setem lagi. Berapa jumlah setem semuanya?",
+      gen: () => ({ a: ri(800, 2800), b: ri(300, 1500) }) },
+    { t: "Kilang A menghasilkan {a} unit pada minggu pertama dan {b} unit pada minggu kedua. Berapa jumlah unit dihasilkan?",
+      gen: () => ({ a: ri(2200, 5500), b: ri(1500, 3200) }) },
+    { t: "Perpustakaan ada {a} buah buku. Selepas belian baru {b} buah, berapa jumlah buku sekarang?",
+      gen: () => ({ a: ri(2500, 6000), b: ri(500, 2500) }) }
+  ],
+  minus: [
+    { t: "Sebuah bakul ada {a} biji epal. Selepas {b} biji dijual, berapa biji epal yang tinggal?",
+      gen: () => { const a = ri(1500, 4500); const b = ri(400, a - 300); return { a, b }; } },
+    { t: "Kilang ada {a} unit stok. Selepas menghantar {b} unit, berapa unit yang tinggal?",
+      gen: () => { const a = ri(3500, 8500); const b = ri(1200, a - 800); return { a, b }; } },
+    { t: "Encik Zaki mempunyai RM{a}. Dia membelanjakan RM{b}. Berapakah baki wangnya?",
+      gen: () => { const a = ri(2000, 5000); const b = ri(600, a - 400); return { a, b }; } },
+    { t: "Sekolah ada {a} orang murid. Jika {b} orang tidak hadir, berapa orang murid yang hadir?",
+      gen: () => { const a = ri(1200, 2800); const b = ri(80, 350); return { a, b }; } },
+    { t: "Puan Salmah ada {a} biji telur. Dia guna {b} biji untuk buat kek. Berapa biji telur yang tinggal?",
+      gen: () => { const a = ri(600, 1200); const b = ri(150, 450); return { a, b }; } },
+    { t: "Sebuah stadium ada {a} tempat duduk. Jika {b} sudah diduduki, berapa tempat kosong?",
+      gen: () => { const a = ri(4500, 9500); const b = ri(1500, a - 1000); return { a, b }; } }
+  ],
+  times: [
+    { t: "Setiap kotak ada {a} biji telur. Berapakah jumlah telur dalam {b} kotak?",
+      gen: () => ({ a: ri(120, 350), b: ri(3, 8) }) },
+    { t: "Sebuah bas boleh membawa {a} orang penumpang. Berapa orang boleh dibawa oleh {b} buah bas?",
+      gen: () => ({ a: ri(35, 60), b: ri(5, 9) }) },
+    { t: "Sebuah kilang menghasilkan {a} buah kereta setiap hari. Berapakah jumlah kereta dihasilkan dalam {b} hari?",
+      gen: () => ({ a: ri(180, 450), b: ri(4, 8) }) },
+    { t: "Satu peket biskut ada {a} keping. Berapa keping biskut dalam {b} peket?",
+      gen: () => ({ a: ri(25, 95), b: ri(5, 9) }) },
+    { t: "Dewan ada {a} kerusi setiap baris. Berapa jumlah kerusi dalam {b} baris?",
+      gen: () => ({ a: ri(55, 140), b: ri(5, 9) }) },
+    { t: "Kilang biskut mengeluarkan {a} tin sehari. Berapa jumlah tin dalam {b} hari?",
+      gen: () => ({ a: ri(200, 600), b: ri(3, 7) }) }
+  ],
+  divide: [
+    { t: "{a} biji gula-gula dibahagi sama rata kepada {b} orang kanak-kanak. Berapa biji setiap seorang dapat?",
+      gen: () => { const b = ri(4, 9); const q = ri(20, 90); return { a: b * q, b }; } },
+    { t: "{a} helai kertas dibahagi ke dalam {b} kotak sama rata. Berapa helai dalam setiap kotak?",
+      gen: () => { const b = ri(3, 8); const q = ri(250, 750); return { a: b * q, b }; } },
+    { t: "Sebuah sekolah ada {a} orang murid dibahagi kepada {b} kelas sama banyak. Berapa orang murid dalam setiap kelas?",
+      gen: () => { const b = ri(4, 8); const q = ri(28, 45); return { a: b * q, b }; } },
+    { t: "{a} biji oren dimasukkan ke dalam {b} bakul sama banyak. Berapa biji dalam setiap bakul?",
+      gen: () => { const b = ri(3, 9); const q = ri(60, 250); return { a: b * q, b }; } },
+    { t: "Encik Ali menabung RM{a} dalam {b} bulan. Berapakah purata simpanan sebulan?",
+      gen: () => { const b = ri(3, 8); const q = ri(180, 800); return { a: b * q, b }; } },
+    { t: "Sebuah kilang menghasilkan {a} buah kek dalam {b} hari. Berapa buah kek sehari?",
+      gen: () => { const b = ri(3, 7); const q = ri(150, 600); return { a: b * q, b }; } }
+  ]
+};
+
+function genWord(type) {
+  const pool = wordProbs[type];
+  const template = pool[Math.floor(rand() * pool.length)];
+  const nums = template.gen();
+  const text = template.t.replace('{a}', nums.a).replace('{b}', nums.b);
+  let ans;
+  if (type === 'add') ans = nums.a + nums.b;
+  else if (type === 'minus') ans = nums.a - nums.b;
+  else if (type === 'times') ans = nums.a * nums.b;
+  else ans = nums.a / nums.b;
+  return { text, ans };
+}
+
+function buildSection(gridId, generator, prefix) {
+  const grid = document.getElementById(gridId);
+  for (let i = 0; i < 10; i++) {
+    const q = generator();
+    const qid = prefix + i;
+    const div = document.createElement('div');
+    div.className = 'q';
+    div.dataset.answer = q.ans;
+    div.innerHTML =
+      '<div class="q-num">' + (i + 1) + '</div>' +
+      '<div class="q-text">' + q.text + ' = ?</div>' +
+      '<div class="canvas-wrap">' +
+        '<canvas id="c-' + qid + '"></canvas>' +
+        '<button class="clear-btn" onclick="clearCanvas(\'c-' + qid + '\')">✕</button>' +
+      '</div>' +
+      '<div class="answer-row">' +
+        '<span class="correct-ans">Answer: ' + q.ans + '</span>' +
+        '<div class="mark-buttons">' +
+          '<button class="mark-btn tick" onclick="markQ(this, true)">✓</button>' +
+          '<button class="mark-btn cross" onclick="markQ(this, false)">✗</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="redo-wrap">' +
+        '<div class="redo-label">✏️ Write the correct answer:</div>' +
+        '<canvas class="redo-canvas" id="r-' + qid + '"></canvas>' +
+        '<button class="clear-btn" style="position:relative;margin-top:4px;" onclick="clearCanvas(\'r-' + qid + '\')">✕ clear</button>' +
+      '</div>';
+    grid.appendChild(div);
+  }
+}
+
+function buildAllWordProblems(gridId) {
+  const grid = document.getElementById(gridId);
+  // generate 3 of each type
+  const items = [];
+  ['add','minus','times','divide'].forEach(type => {
+    for (let i = 0; i < 3; i++) items.push({ type, q: genWord(type) });
+  });
+  // Fisher–Yates shuffle using seeded rand() so questions look random
+  // but still refresh once a day (same seed = same shuffle)
+  for (let i = items.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [items[i], items[j]] = [items[j], items[i]];
+  }
+  items.forEach((item, i) => renderWordCard(grid, item.q, 'w' + i, i + 1));
+}
+
+function renderWordCard(grid, q, qid, num) {
+    const div = document.createElement('div');
+    div.className = 'q wq';
+    div.dataset.answer = q.ans;
+    div.innerHTML =
+      '<div class="q-num">' + num + '</div>' +
+      '<div class="wq-text">' + q.text + '</div>' +
+      '<div class="canvas-wrap">' +
+        '<canvas id="c-' + qid + '"></canvas>' +
+        '<button class="clear-btn" onclick="clearCanvas(\'c-' + qid + '\')">✕</button>' +
+      '</div>' +
+      '<div class="answer-row">' +
+        '<span class="correct-ans">Answer: ' + q.ans + '</span>' +
+        '<div class="mark-buttons">' +
+          '<button class="mark-btn tick" onclick="markQ(this, true)">✓</button>' +
+          '<button class="mark-btn cross" onclick="markQ(this, false)">✗</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="redo-wrap">' +
+        '<div class="redo-label">✏️ Write the correct answer:</div>' +
+        '<canvas class="redo-canvas" id="r-' + qid + '"></canvas>' +
+        '<button class="clear-btn" style="position:relative;margin-top:4px;" onclick="clearCanvas(\'r-' + qid + '\')">✕ clear</button>' +
+      '</div>';
+    grid.appendChild(div);
+}
+
+function setupCanvas(canvas) {
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.strokeStyle = '#1a237e';
+  ctx.lineWidth = 3;
+  let drawing = false, lastX = 0, lastY = 0, usingPencil = false;
+  function pos(e) { const r = canvas.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
+  canvas.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'touch' && usingPencil) return;
+    if (e.pointerType === 'pen') usingPencil = true;
+    canvas.setPointerCapture(e.pointerId);
+    drawing = true;
+    const p = pos(e); lastX = p.x; lastY = p.y;
+    ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(lastX + 0.1, lastY + 0.1); ctx.stroke();
+    e.preventDefault();
+  });
+  canvas.addEventListener('pointermove', (e) => {
+    if (!drawing) return;
+    if (e.pointerType === 'touch' && usingPencil) return;
+    const p = pos(e);
+    const pressure = (e.pressure && e.pressure > 0) ? e.pressure : 0.5;
+    ctx.lineWidth = 2 + pressure * 4;
+    ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(p.x, p.y); ctx.stroke();
+    lastX = p.x; lastY = p.y;
+    e.preventDefault();
+  });
+  function end(e) {
+    drawing = false;
+    if (e && canvas.hasPointerCapture && canvas.hasPointerCapture(e.pointerId)) canvas.releasePointerCapture(e.pointerId);
+  }
+  canvas.addEventListener('pointerup', end);
+  canvas.addEventListener('pointercancel', end);
+  canvas.addEventListener('pointerleave', end);
+  canvas.addEventListener('touchstart', e => e.preventDefault(), { passive: false });
+  canvas.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
+}
+
+function clearCanvas(id) {
+  const c = document.getElementById(id);
+  if (!c) return;
+  const ctx = c.getContext('2d');
+  ctx.clearRect(0, 0, c.width, c.height);
+}
+
+function showAnswers() {
+  document.querySelectorAll('.q').forEach(q => q.classList.add('checked'));
+  setTimeout(() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }), 200);
+}
+
+function markQ(btn, isCorrect) {
+  const q = btn.closest('.q');
+  const tick = q.querySelector('.mark-btn.tick');
+  const cross = q.querySelector('.mark-btn.cross');
+  tick.classList.remove('active');
+  cross.classList.remove('active');
+  q.classList.remove('correct', 'wrong');
+  if (isCorrect) {
+    tick.classList.add('active'); q.classList.add('correct');
+  } else {
+    cross.classList.add('active'); q.classList.add('wrong');
+    const redo = q.querySelector('.redo-canvas');
+    if (redo && !redo.dataset.ready) {
+      setTimeout(() => { setupCanvas(redo); redo.dataset.ready = '1'; }, 50);
+    }
+  }
+  updateScore();
+  checkFinish();
+}
+
+function updateScore() {
+  const total = document.querySelectorAll('.q').length;
+  const correct = document.querySelectorAll('.q.correct').length;
+  document.getElementById('scoreBox').textContent = 'Score: ' + correct + ' / ' + total;
+}
+
+function checkFinish() {
+  const total = document.querySelectorAll('.q').length;
+  const marked = document.querySelectorAll('.q.correct, .q.wrong').length;
+  if (marked === total) {
+    const correct = document.querySelectorAll('.q.correct').length;
+    const box = document.getElementById('celebrate');
+    const title = document.getElementById('celebrateTitle');
+    const msg = document.getElementById('celebrateMsg');
+    if (correct === total) {
+      title.textContent = '🏆 Perfect Score! 🏆';
+      msg.textContent = 'Wow! You got all ' + total + ' correct! Amazing!';
+    } else if (correct >= total * 0.8) {
+      title.textContent = '⭐ Great Job! ⭐';
+      msg.textContent = 'You got ' + correct + ' out of ' + total + '. Very good!';
+    } else {
+      title.textContent = '💪 Good Effort!';
+      msg.textContent = 'You got ' + correct + ' out of ' + total + '. Keep practicing!';
+    }
+    box.classList.add('show');
+  }
+}
+
+function clearAll() {
+  document.querySelectorAll('canvas').forEach(c => {
+    const ctx = c.getContext('2d');
+    ctx.clearRect(0, 0, c.width, c.height);
+  });
+}
+
+function formatDate() {
+  const days = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat', 'Sabtu'];
+  const months = ['Januari','Februari','Mac','April','Mei','Jun','Julai','Ogos','September','Oktober','November','Disember'];
+  const d = new Date();
+  return '📅 ' + days[d.getDay()] + ', ' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+window.addEventListener('load', () => {
+  document.getElementById('dateBox').textContent = formatDate();
+  buildSection('addGrid',    genAdd,    'a');
+  buildSection('minusGrid',  genMinus,  's');
+  buildSection('timesGrid',  genTimes,  'm');
+  buildSection('divideGrid', genDivide, 'd');
+  buildAllWordProblems('wAllGrid');
+  requestAnimationFrame(() => {
+    document.querySelectorAll('canvas:not(.redo-canvas)').forEach(setupCanvas);
+  });
+});
+</script>
+</body>
+</html>
