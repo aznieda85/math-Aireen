@@ -55,9 +55,13 @@ h1 { margin:0; font-size:34px;
 .wq-text { font-size:16px; line-height:1.45; color:#333; margin:6px 0 10px; padding-left:4px; font-weight:600; }
 .canvas-wrap { position:relative; }
 canvas { width:100%; height:180px; background:white; border:2px dashed #bbb; border-radius:12px; touch-action:none; display:block; }
-.clear-btn { position:absolute; top:4px; right:4px; background:#ffcdd2; color:#c62828; border:none;
-  border-radius:50%; width:26px; height:26px; font-size:14px; font-weight:bold; cursor:pointer;
-  display:flex; align-items:center; justify-content:center; padding:0; }
+canvas.erasing { border-color:#f57f17; border-style:solid; background:#fffde7; cursor:cell; }
+.tool-btn { position:absolute; top:4px; border:none; border-radius:50%; width:30px; height:30px;
+  font-size:15px; font-weight:bold; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  padding:0; box-shadow:0 2px 4px rgba(0,0,0,0.15); touch-action:manipulation; }
+.eraser-btn { right:38px; background:#fff9c4; color:#f57f17; }
+.eraser-btn.active { background:#f57f17; color:white; box-shadow:0 0 0 3px #ffe082; }
+.clear-btn { right:4px; background:#ffcdd2; color:#c62828; }
 .answer-row { display:none; margin-top:8px; text-align:center; }
 .q.checked .answer-row { display:block; }
 .correct-ans { display:inline-block; background:#e8f5e9; color:#2e7d32; padding:4px 12px; border-radius:10px; font-weight:bold; font-size:18px; border:2px solid #4CAF50; }
@@ -354,10 +358,11 @@ function buildSection(gridId, generator, prefix) {
     div.innerHTML =
       '<div class="q-num">' + (i + 1) + '</div>' +
       '<div class="q-text">' + q.text + ' = ?</div>' +
-      '<div class="canvas-label">✏️ Kira di sini (working area)</div>' +
+      '<div class="canvas-label">✏️ Kira di sini (working area) — 🧽 Padam · ✕ Kosongkan</div>' +
       '<div class="canvas-wrap">' +
         '<canvas id="c-' + qid + '"></canvas>' +
-        '<button class="clear-btn" onclick="clearCanvas(\'c-' + qid + '\')">✕</button>' +
+        '<button class="tool-btn eraser-btn" title="Padam" onclick="toggleEraser(this, \'c-' + qid + '\')">🧽</button>' +
+        '<button class="tool-btn clear-btn" title="Kosongkan" onclick="clearCanvas(\'c-' + qid + '\')">✕</button>' +
       '</div>' +
       '<div class="answer-label">✅ Tulis jawapan di sini (Apple Pencil auto-tukar)</div>' +
       '<input type="text" class="answer-input" inputmode="numeric" pattern="[0-9]*" placeholder="?">' +
@@ -374,13 +379,10 @@ function buildSection(gridId, generator, prefix) {
  
 function buildAllWordProblems(gridId) {
   const grid = document.getElementById(gridId);
-  // generate 3 of each type
   const items = [];
   ['add','minus','times','divide'].forEach(type => {
     for (let i = 0; i < 3; i++) items.push({ type, q: genWord(type) });
   });
-  // Fisher–Yates shuffle using seeded rand() so questions look random
-  // but still refresh once a day (same seed = same shuffle)
   for (let i = items.length - 1; i > 0; i--) {
     const j = Math.floor(rand() * (i + 1));
     [items[i], items[j]] = [items[j], items[i]];
@@ -395,10 +397,11 @@ function renderWordCard(grid, q, qid, num) {
     div.innerHTML =
       '<div class="q-num">' + num + '</div>' +
       '<div class="wq-text">' + q.text + '</div>' +
-      '<div class="canvas-label">✏️ Kira di sini (working area)</div>' +
+      '<div class="canvas-label">✏️ Kira di sini (working area) — 🧽 Padam · ✕ Kosongkan</div>' +
       '<div class="canvas-wrap">' +
         '<canvas id="c-' + qid + '"></canvas>' +
-        '<button class="clear-btn" onclick="clearCanvas(\'c-' + qid + '\')">✕</button>' +
+        '<button class="tool-btn eraser-btn" title="Padam" onclick="toggleEraser(this, \'c-' + qid + '\')">🧽</button>' +
+        '<button class="tool-btn clear-btn" title="Kosongkan" onclick="clearCanvas(\'c-' + qid + '\')">✕</button>' +
       '</div>' +
       '<div class="answer-label">✅ Tulis jawapan di sini (Apple Pencil auto-tukar)</div>' +
       '<input type="text" class="answer-input" inputmode="numeric" pattern="[0-9]*" placeholder="?">' +
@@ -412,9 +415,15 @@ function renderWordCard(grid, q, qid, num) {
     grid.appendChild(div);
 }
  
+// Track initialized state per canvas so we can lazily size them when their
+// tab becomes visible (canvases in display:none sections start at 0 x 0
+// and cannot be drawn on until re-measured).
 function setupCanvas(canvas) {
-  const dpr = window.devicePixelRatio || 1;
+  if (canvas.dataset.initialized === '1') return;
   const rect = canvas.getBoundingClientRect();
+  if (rect.width === 0 || rect.height === 0) return; // still hidden — retry later
+  canvas.dataset.initialized = '1';
+  const dpr = window.devicePixelRatio || 1;
   canvas.width = rect.width * dpr;
   canvas.height = rect.height * dpr;
   const ctx = canvas.getContext('2d');
@@ -425,12 +434,22 @@ function setupCanvas(canvas) {
   ctx.lineWidth = 3;
   let drawing = false, lastX = 0, lastY = 0, usingPencil = false;
   function pos(e) { const r = canvas.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
+  function applyMode() {
+    if (canvas.dataset.eraser === '1') {
+      ctx.globalCompositeOperation = 'destination-out';
+    } else {
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.strokeStyle = '#1a237e';
+    }
+  }
   canvas.addEventListener('pointerdown', (e) => {
     if (e.pointerType === 'touch' && usingPencil) return;
     if (e.pointerType === 'pen') usingPencil = true;
     canvas.setPointerCapture(e.pointerId);
     drawing = true;
+    applyMode();
     const p = pos(e); lastX = p.x; lastY = p.y;
+    ctx.lineWidth = canvas.dataset.eraser === '1' ? 22 : 3;
     ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(lastX + 0.1, lastY + 0.1); ctx.stroke();
     e.preventDefault();
   });
@@ -438,8 +457,13 @@ function setupCanvas(canvas) {
     if (!drawing) return;
     if (e.pointerType === 'touch' && usingPencil) return;
     const p = pos(e);
-    const pressure = (e.pressure && e.pressure > 0) ? e.pressure : 0.5;
-    ctx.lineWidth = 2 + pressure * 4;
+    applyMode();
+    if (canvas.dataset.eraser === '1') {
+      ctx.lineWidth = 22;
+    } else {
+      const pressure = (e.pressure && e.pressure > 0) ? e.pressure : 0.5;
+      ctx.lineWidth = 2 + pressure * 4;
+    }
     ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(p.x, p.y); ctx.stroke();
     lastX = p.x; lastY = p.y;
     e.preventDefault();
@@ -455,11 +479,35 @@ function setupCanvas(canvas) {
   canvas.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
 }
  
+function initVisibleCanvases() {
+  document.querySelectorAll('.section.active canvas').forEach(setupCanvas);
+}
+ 
+function toggleEraser(btn, canvasId) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const on = canvas.dataset.eraser === '1';
+  if (on) {
+    canvas.dataset.eraser = '0';
+    canvas.classList.remove('erasing');
+    btn.classList.remove('active');
+    btn.textContent = '🧽';
+  } else {
+    canvas.dataset.eraser = '1';
+    canvas.classList.add('erasing');
+    btn.classList.add('active');
+    btn.textContent = '✏️';
+  }
+}
+ 
 function clearCanvas(id) {
   const c = document.getElementById(id);
   if (!c) return;
   const ctx = c.getContext('2d');
+  ctx.save();
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.clearRect(0, 0, c.width, c.height);
+  ctx.restore();
 }
  
 let answersShown = false;
@@ -634,7 +682,10 @@ function checkFinish() {
 function clearAll() {
   document.querySelectorAll('canvas').forEach(c => {
     const ctx = c.getContext('2d');
+    ctx.save();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, c.width, c.height);
+    ctx.restore();
   });
   document.querySelectorAll('.answer-input').forEach(inp => inp.value = '');
   answersShown = false;
@@ -701,6 +752,10 @@ function setActiveTab(name) {
     if (on) b.classList.add('active-' + name);
   });
   window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Once the freshly shown section has non-zero size, initialise its canvases.
+  requestAnimationFrame(() => {
+    requestAnimationFrame(initVisibleCanvases);
+  });
 }
  
 window.addEventListener('load', () => {
@@ -716,12 +771,18 @@ window.addEventListener('load', () => {
   setActiveTab('add');
   renderHistory();
   attachKeypad();
-  requestAnimationFrame(() => {
-    document.querySelectorAll('canvas').forEach(setupCanvas);
+  requestAnimationFrame(initVisibleCanvases);
+});
+ 
+// Re-measure any canvases whose section becomes visible for the first time,
+// or after an orientation change / resize.
+window.addEventListener('resize', () => {
+  document.querySelectorAll('.section.active canvas').forEach(c => {
+    if (c.dataset.initialized === '1') return;
+    setupCanvas(c);
   });
 });
 </script>
 </body>
 </html>
  
-
