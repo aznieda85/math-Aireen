@@ -1,3 +1,200 @@
+
+Claude finished the response
+1783223705373_index.hml.html
+html
+
+ruang jawapan terlalu kecil untuk anak saya untuk menulis.  saya perlu ruang yg besar. mungkin buat tab tambah, tolak, darab, bahagi & soala n ayat.please update\
+
+
+Used 4 tools, edited 3 files
+Used 4 tools, edited 3 files
+Now update mobile responsive canvas heights:
+
+
+Edited a file
+Edited a file
+Now add the tab bar and mark sections with data attributes:
+
+
+Edited a file
+Edited a file
+Now add JS for tab switching. Add it in the load handler:
+
+
+Ran 5 commands, used 2 tools, edited a file
+Ran 5 commands, used 2 tools, edited a file
+Siap! Perubahan:
+
+Tab navigation — 5 butang tab di atas (sticky, ikut anda scroll): ➕ Tambah, ➖ Tolak, ✖️ Darab, ➗ Bahagi, 📖 Soalan Ayat. Tekan mana-mana tab, hanya section itu je muncul. Butang tab yang aktif akan warna ikut section.
+
+Ruang menulis lebih besar — canvas jawapan tinggi 180px (dari 90px, dua kali ganda), kad soalan lebih lebar (grid ~320px min untuk arithmetic, ~420px untuk soalan ayat). Redo canvas (untuk jawapan yang salah) pun besar sekarang — 140px.
+
+Cara update di GitHub:
+
+Buka repo math-Aireen
+Klik file index.html
+Klik icon pensil ✏️ (Edit)
+Select all (Ctrl+A) → Delete
+Copy paste content baru dari file yang saya berikan
+Commit changes
+Atau delete index.html dulu, kemudian upload file baru (rename dulu jadi index.html).
+
+
+C:\Users\azlan\AppData\Roaming\Claude\local-agent-mode-sessions\be91db77-587d-4ab6-b8e4-b69a0331931f\3b7da662-9a23-4ec4-8660-e95c31a4615a\local_f2ccf97a-1186-4328-ad31-70d363f18a5a\outputs\math_fun_standard3.html
+Code 
+to update
+1) is there any way can auto check answer by reading the pencil writing?
+2) i need a button show and hide answer. cause currently once i click show answer i dont have button to hide answer
+
+
+Used 3 tools, edited 2 files, read a file
+Used 3 tools, edited 2 files, read a file
+Now update the buildSection template to include the answer input:
+
+
+Edited a file
+Edited a file
+Same for renderWordCard:
+
+
+Edited a file
+Edited a file
+Now replace showAnswers with the new toggleCheck function that auto-marks:
+
+
+Ran 4 commands, read 2 files, used 2 tools
+Ran 4 commands, read 2 files, used 2 tools
+Siap! Perubahan penting untuk anda faham:
+
+1. Auto-check pakai Apple Pencil Scribble (built-in iPad)
+
+Cara sebenar OCR tulisan tangan kanak-kanak dari canvas tak reliable — apa yang saya buat lebih baik: iPad Apple Pencil ada Scribble built-in yang auto-tukar tulisan tangan jadi teks bila anda tulis dalam text box.
+
+Setiap soalan sekarang ada 2 bahagian:
+
+🖊️ Kira di sini (canvas besar) — untuk anak buat kerja panjang lebar/rough (long division, jumlahkan digit demi digit)
+✅ Tulis jawapan di sini (text box hijau) — tulis nombor jawapan pakai Apple Pencil, Scribble akan auto-tukar jadi teks
+Nota penting untuk iPad:
+
+Pastikan Scribble aktif: Settings → Apple Pencil → Scribble ON
+Bahasa: Settings → General → Language & Region → tambah English kalau belum ada (Scribble untuk digit paling baik dengan English)
+2. Butang Show/Hide toggle
+
+Sekarang hanya ada satu butang: 🔍 Check My Answers
+
+Tekan sekali → auto-mark semua (hijau = betul, merah = salah), tunjuk jawapan sebenar
+Tekan lagi → butang tukar jadi 🙈 Hide Answers, semua tanda + jawapan disembunyikan, anak boleh cuba semula
+🧹 Clear Writing — reset semua tulisan, jawapan, dan tanda
+Butang manual ✓/✗ masih ada di bawah setiap soalan kalau anda nak override auto-mark.
+
+Untuk update di GitHub: buka repo → klik index.html → pensil ✏️ → hapus semua → paste content baru → Commit changes. Tunggu 1–2 minit, refresh page.
+
+
+C:\Users\azlan\AppData\Roaming\Claude\local-agent-mode-sessions\be91db77-587d-4ab6-b8e4-b69a0331931f\3b7da662-9a23-4ec4-8660-e95c31a4615a\local_f2ccf97a-1186-4328-ad31-70d363f18a5a\outputs\math_fun_standard3.html
+Code 
+saya perlukan data to be import on daily basis selepas dia menjawab. like audit trail berapa markah and soalan mana salah
+
+
+Edited 4 files, used 4 tools
+Edited 4 files, used 4 tools
+Now call renderHistory on page load:
+
+
+Ran 29 commands, used 3 tools, edited 2 files
+Ran 29 commands, used 3 tools, edited 2 files
+Siap! Audit trail lengkap.
+
+Tab baru: 📊 History
+
+Setiap kali anak tekan 🔍 Check My Answers, sesi hari itu auto-save ke iPad. Kalau buat semula hari yang sama, akan replace (guna versi terkini). Buka tab History untuk lihat semua rekod:
+
+📅 Tarikh + masa
+Skor keseluruhan (contoh: 45/52 = 87%)
+Breakdown ikut operasi: Tambah, Tolak, Darab, Bahagi, Soalan Ayat (contoh: Darab: 8/10)
+Border warna: hijau (≥80%), oren (60–79%), merah (<60%)
+Butang "❌ N soalan tidak betul" — klik untuk expand senarai soalan salah, dengan jawapan betul vs apa yang ditulis
+Butang di tab History:
+
+📥 Download CSV — download semua rekod jadi file Excel-friendly. Guna kalau nak share dengan cikgu/tutor atau simpan history
+🗑 Padam Semua Rekod — reset semua (perlu confirm dulu)
+Penting untuk faham:
+Data disimpan dalam browser iPad itu sendiri (localStorage). Jadi:
+
+Kalau delete Safari cache/history → boleh terpadam
+Kalau buka guna iPad lain → tak akan nampak rekod
+Guna Download CSV untuk backup sekali-sekala (contoh: setiap minggu)
+Update GitHub: buka repo math-Aireen → index.html → pensil ✏️ → hapus semua → paste content baru → Commit changes.
+
+
+C:\Users\azlan\AppData\Roaming\Claude\local-agent-mode-sessions\be91db77-587d-4ab6-b8e4-b69a0331931f\3b7da662-9a23-4ec4-8660-e95c31a4615a\local_f2ccf97a-1186-4328-ad31-70d363f18a5a\outputs\math_fun_standard3.html
+Code 
+Uploaded image
+how to delete
+
+
+Thought process
+Thought process
+Anda dah masuk edit mode. Untuk hapus semua content:
+
+Cara 1 (paling senang):
+
+Klik di dalam kotak kod (mana-mana line)
+Tekan Ctrl+A (Windows) atau Cmd+A (Mac) — pilih semua
+Tekan Delete atau Backspace — semua hilang
+Sekarang paste content baru (Ctrl+V / Cmd+V)
+Tekan butang hijau Commit changes... (atas kanan)
+Cara 2 (kalau Ctrl+A tak jadi):
+
+Klik di line 1
+Tekan Ctrl+Shift+End (Windows) atau Cmd+Shift+↓ (Mac) — pilih dari cursor sampai bawah
+Tekan Delete
+Paste content baru → Commit changes
+Selepas Commit, tunggu 1–2 menit untuk GitHub Pages update, kemudian refresh: https://aznieda85.github.io/math-Aireen/
+
+Sekarang paste content baru (Ctrl+V / Cmd+V). how to paste new where to get the code
+
+
+Thought process
+Thought process
+Untuk dapatkan kod baru:
+
+Cara 1 — Dari file yang saya kongsi
+
+Scroll ke atas dalam chat ini, cari card file math_fun_standard3.html (biru/hitam kotak yang saya hantar sebelum ini)
+Klik card itu — file akan buka di komputer anda
+Klik kanan dalam file → Select All → Copy
+Balik ke GitHub, paste (Ctrl+V) dalam kotak editor
+Cara 2 — Buka dari folder komputer
+
+Buka File Explorer (Windows) atau Finder (Mac)
+Cari file math_fun_standard3.html di folder Downloads atau folder yang saya letakkan
+Klik kanan file → Open with → Notepad (Windows) atau TextEdit (Mac)
+Dalam Notepad: Edit → Select All (atau Ctrl+A) → Copy (Ctrl+C)
+Paste dalam GitHub editor
+Cara 3 — Paling cepat (drag & drop upload)
+
+Sebenarnya lagi senang, tak payah copy-paste:
+
+Tekan Cancel changes dulu (batalkan edit)
+Balik ke repo utama
+Klik file index.html → klik icon tong sampah 🗑 → Commit (delete)
+Balik ke repo → Add file → Upload files
+Sebelum upload, di komputer rename file math_fun_standard3.html jadi index.html
+Drag & drop file index.html masuk → Commit
+Cara 3 paling reliable — tak ada risk copy-paste ada character yang tercopot.
+
+Bagitau kalau tak jumpa card file dalam chat, saya boleh present semula.
+
+
+
+Claude Fable 5 works best with the latest desktop app.
+
+
+
+Claude is AI and can make mistakes. Please double-check responses. Give us feedback
+
+
+Math fun standard3 · HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,8 +239,8 @@ h1 { margin:0; font-size:34px;
 .minus-sub { background:#e3f2fd; color:#1565c0; }
 .times-sub { background:#fff3e0; color:#ef6c00; }
 .divide-sub { background:#f3e5f5; color:#6a1b9a; }
-.grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(220px,1fr)); gap:14px; }
-.wgrid { display:grid; grid-template-columns:repeat(auto-fill, minmax(320px,1fr)); gap:14px; }
+.grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(320px,1fr)); gap:18px; }
+.wgrid { display:grid; grid-template-columns:repeat(auto-fill, minmax(420px,1fr)); gap:18px; }
 .q { background:#fffdf7; border:3px solid #ffe6a7; border-radius:18px; padding:10px 10px 8px; position:relative; transition:transform 0.15s; }
 .q.wq { background:#fffaf5; border-color:#ffd8b3; padding:14px; }
 .q.correct { border-color:#4CAF50; background:#eaffea; }
@@ -54,7 +251,7 @@ h1 { margin:0; font-size:34px;
 .q-text { font-size:24px; font-weight:bold; text-align:center; color:#333; margin:4px 0 8px; letter-spacing:1px; }
 .wq-text { font-size:16px; line-height:1.45; color:#333; margin:6px 0 10px; padding-left:4px; font-weight:600; }
 .canvas-wrap { position:relative; }
-canvas { width:100%; height:90px; background:white; border:2px dashed #bbb; border-radius:12px; touch-action:none; display:block; }
+canvas { width:100%; height:180px; background:white; border:2px dashed #bbb; border-radius:12px; touch-action:none; display:block; }
 .clear-btn { position:absolute; top:4px; right:4px; background:#ffcdd2; color:#c62828; border:none;
   border-radius:50%; width:26px; height:26px; font-size:14px; font-weight:bold; cursor:pointer;
   display:flex; align-items:center; justify-content:center; padding:0; }
@@ -69,7 +266,7 @@ canvas { width:100%; height:90px; background:white; border:2px dashed #bbb; bord
 .redo-wrap { display:none; margin-top:8px; }
 .q.wrong .redo-wrap { display:block; }
 .redo-label { font-size:13px; color:#c62828; font-weight:bold; margin-bottom:4px; text-align:center; }
-.redo-canvas { height:70px; border-color:#e53935; }
+.redo-canvas { height:140px; border-color:#e53935; }
 .controls { text-align:center; padding:20px 0 40px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
 .btn { background:linear-gradient(135deg,#667eea,#764ba2); color:white; border:none; padding:16px 32px;
   font-size:20px; font-weight:bold; border-radius:30px; cursor:pointer; box-shadow:0 6px 16px rgba(0,0,0,0.2); font-family:inherit; }
@@ -85,11 +282,62 @@ canvas { width:100%; height:90px; background:white; border:2px dashed #bbb; bord
 .celebrate-box p { font-size:20px; color:#555; margin:10px 0 20px; }
 @media (max-width:500px) {
   h1 { font-size:26px; }
-  .grid { grid-template-columns:repeat(auto-fill, minmax(160px,1fr)); }
+  .grid { grid-template-columns:1fr; }
   .wgrid { grid-template-columns:1fr; }
   .q-text { font-size:20px; }
-  canvas { height:70px; }
+  canvas { height:150px; }
 }
+/* Tabs */
+.tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px;
+  background:rgba(255,255,255,0.95); padding:12px; border-radius:20px;
+  box-shadow:0 8px 24px rgba(0,0,0,0.12); position:sticky; top:8px; z-index:50; }
+.tab-btn { flex:1 1 auto; min-width:120px; padding:14px 18px; border-radius:14px;
+  border:3px solid transparent; background:#f5f5f5; color:#555; font-family:inherit;
+  font-size:17px; font-weight:bold; cursor:pointer; transition:all 0.15s;
+  display:flex; align-items:center; justify-content:center; gap:6px; }
+.tab-btn:active { transform:scale(0.97); }
+.tab-btn.active-add    { background:#e8f5e9; color:#2e7d32; border-color:#4CAF50; }
+.tab-btn.active-minus  { background:#e3f2fd; color:#1565c0; border-color:#2196F3; }
+.tab-btn.active-times  { background:#fff3e0; color:#ef6c00; border-color:#ff9800; }
+.tab-btn.active-divide { background:#f3e5f5; color:#6a1b9a; border-color:#9c27b0; }
+.tab-btn.active-word   { background:#fce4ec; color:#ad1457; border-color:#e91e63; }
+.tab-btn.active-history { background:#eceff1; color:#37474f; border-color:#607d8b; }
+.historyprob { border-left:8px solid #607d8b; }
+.historyprob h2 { color:#37474f; }
+.history-actions { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; }
+.history-item { background:#fafafa; border-radius:14px; padding:14px 16px; margin:12px 0;
+  border-left:5px solid #4CAF50; box-shadow:0 2px 6px rgba(0,0,0,0.06); }
+.history-item.low { border-left-color:#e53935; }
+.history-item.mid { border-left-color:#ff9800; }
+.history-item h3 { margin:0 0 8px; color:#333; font-size:18px; }
+.stats-row { display:flex; flex-wrap:wrap; gap:6px; margin:8px 0; }
+.stat-badge { display:inline-block; padding:4px 10px; border-radius:8px; font-size:14px; font-weight:bold; }
+.stat-add { background:#e8f5e9; color:#2e7d32; }
+.stat-minus { background:#e3f2fd; color:#1565c0; }
+.stat-times { background:#fff3e0; color:#ef6c00; }
+.stat-divide { background:#f3e5f5; color:#6a1b9a; }
+.stat-word { background:#fce4ec; color:#ad1457; }
+.wrong-list { background:#fff5f5; border-radius:8px; padding:8px 14px; margin-top:8px; }
+.wrong-list summary { cursor:pointer; color:#c62828; font-weight:bold; padding:4px 0; }
+.wrong-list ul { margin:8px 0 4px; padding-left:22px; }
+.wrong-list li { margin:4px 0; font-size:14px; color:#555; line-height:1.4; }
+.empty-history { text-align:center; color:#888; padding:40px 20px; font-size:16px; }
+.tab-badge { background:rgba(0,0,0,0.1); padding:2px 8px; border-radius:10px; font-size:13px; }
+.section { display:none; }
+.section.active { display:block; }
+.answer-input { width:100%; font-size:34px; text-align:center; padding:12px 8px; margin-top:8px;
+  border:3px solid #4CAF50; border-radius:12px; background:#f1f8e9; font-weight:bold;
+  color:#2e7d32; font-family:inherit; box-sizing:border-box; }
+.answer-input:focus { outline:none; border-color:#ff9800; background:#fff8e1; }
+.q.correct .answer-input { border-color:#2e7d32; background:#c8e6c9; }
+.q.wrong .answer-input { border-color:#c62828; background:#ffcdd2; color:#c62828; }
+.canvas-label { font-size:12px; color:#888; text-align:center; margin:6px 0 2px; font-weight:bold; }
+.answer-label { font-size:13px; color:#2e7d32; text-align:center; margin:10px 0 4px; font-weight:bold; }
+body.hide-answers .answer-row { display:none !important; }
+body.hide-answers .q.correct { border-color:#ffe6a7; background:#fffdf7; }
+body.hide-answers .q.wrong { border-color:#ffe6a7; background:#fffdf7; }
+body.hide-answers .q.correct .answer-input,
+body.hide-answers .q.wrong .answer-input { border-color:#4CAF50; background:#f1f8e9; color:#2e7d32; }
 </style>
 </head>
 <body>
@@ -98,16 +346,33 @@ canvas { width:100%; height:90px; background:white; border:2px dashed #bbb; bord
   <div class="date-box" id="dateBox">Loading...</div>
   <div class="score-box" id="scoreBox">Score: 0 / 52</div>
 </div>
-<div class="section add"><h2><span class="emoji">➕</span> Tambah (Addition)</h2><div class="grid" id="addGrid"></div></div>
-<div class="section minus"><h2><span class="emoji">➖</span> Tolak (Subtraction)</h2><div class="grid" id="minusGrid"></div></div>
-<div class="section times"><h2><span class="emoji">✖️</span> Darab (Multiplication)</h2><div class="grid" id="timesGrid"></div></div>
-<div class="section divide"><h2><span class="emoji">➗</span> Bahagi (Division)</h2><div class="grid" id="divideGrid"></div></div>
-<div class="section wordprob">
+<div class="tabs">
+  <button class="tab-btn" data-tab="add">➕ Tambah</button>
+  <button class="tab-btn" data-tab="minus">➖ Tolak</button>
+  <button class="tab-btn" data-tab="times">✖️ Darab</button>
+  <button class="tab-btn" data-tab="divide">➗ Bahagi</button>
+  <button class="tab-btn" data-tab="word">📖 Soalan Ayat</button>
+  <button class="tab-btn" data-tab="history">📊 History</button>
+</div>
+ 
+<div class="section add active" data-tab="add"><h2><span class="emoji">➕</span> Tambah (Addition)</h2><div class="grid" id="addGrid"></div></div>
+<div class="section minus" data-tab="minus"><h2><span class="emoji">➖</span> Tolak (Subtraction)</h2><div class="grid" id="minusGrid"></div></div>
+<div class="section times" data-tab="times"><h2><span class="emoji">✖️</span> Darab (Multiplication)</h2><div class="grid" id="timesGrid"></div></div>
+<div class="section divide" data-tab="divide"><h2><span class="emoji">➗</span> Bahagi (Division)</h2><div class="grid" id="divideGrid"></div></div>
+<div class="section wordprob" data-tab="word">
   <h2><span class="emoji">📖</span> Soalan Ayat (Word Problems)</h2>
   <div class="wgrid" id="wAllGrid"></div>
 </div>
+<div class="section historyprob" data-tab="history">
+  <h2><span class="emoji">📊</span> Audit Trail (Rekod Harian)</h2>
+  <div class="history-actions">
+    <button class="btn" onclick="exportCSV()">📥 Download CSV</button>
+    <button class="btn reset" onclick="clearHistory()">🗑 Padam Semua Rekod</button>
+  </div>
+  <div id="historyContainer"></div>
+</div>
 <div class="controls">
-  <button class="btn check" onclick="showAnswers()">✅ Show Answers</button>
+  <button class="btn check" id="checkBtn" onclick="toggleCheck()">🔍 Check My Answers</button>
   <button class="btn reset" onclick="clearAll()">🧹 Clear Writing</button>
 </div>
 <div class="celebrate" id="celebrate" onclick="this.classList.remove('show')">
@@ -132,7 +397,7 @@ function rand() {
   return ((t ^ t >>> 14) >>> 0) / 4294967296;
 }
 function ri(min, max) { return Math.floor(rand() * (max - min + 1)) + min; }
-
+ 
 function genAdd() {
   const r = rand(); let a, b;
   if (r < 0.35) { a = ri(150, 899); b = ri(100, 500); }
@@ -164,7 +429,7 @@ function genDivide() {
   const a = b * q;
   return { text: a + ' ÷ ' + b, ans: q };
 }
-
+ 
 const wordProbs = {
   add: [
     { t: "Ali ada {a} biji guli. Abu memberi {b} biji guli lagi kepadanya. Berapa jumlah guli Ali sekarang?",
@@ -223,7 +488,7 @@ const wordProbs = {
       gen: () => { const b = ri(3, 7); const q = ri(150, 600); return { a: b * q, b }; } }
   ]
 };
-
+ 
 function genWord(type) {
   const pool = wordProbs[type];
   const template = pool[Math.floor(rand() * pool.length)];
@@ -236,7 +501,7 @@ function genWord(type) {
   else ans = nums.a / nums.b;
   return { text, ans };
 }
-
+ 
 function buildSection(gridId, generator, prefix) {
   const grid = document.getElementById(gridId);
   for (let i = 0; i < 10; i++) {
@@ -248,26 +513,24 @@ function buildSection(gridId, generator, prefix) {
     div.innerHTML =
       '<div class="q-num">' + (i + 1) + '</div>' +
       '<div class="q-text">' + q.text + ' = ?</div>' +
+      '<div class="canvas-label">✏️ Kira di sini (working area)</div>' +
       '<div class="canvas-wrap">' +
         '<canvas id="c-' + qid + '"></canvas>' +
         '<button class="clear-btn" onclick="clearCanvas(\'c-' + qid + '\')">✕</button>' +
       '</div>' +
+      '<div class="answer-label">✅ Tulis jawapan di sini (Apple Pencil auto-tukar)</div>' +
+      '<input type="text" class="answer-input" inputmode="numeric" pattern="[0-9]*" placeholder="?">' +
       '<div class="answer-row">' +
-        '<span class="correct-ans">Answer: ' + q.ans + '</span>' +
+        '<span class="correct-ans">Jawapan: ' + q.ans + '</span>' +
         '<div class="mark-buttons">' +
           '<button class="mark-btn tick" onclick="markQ(this, true)">✓</button>' +
           '<button class="mark-btn cross" onclick="markQ(this, false)">✗</button>' +
         '</div>' +
-      '</div>' +
-      '<div class="redo-wrap">' +
-        '<div class="redo-label">✏️ Write the correct answer:</div>' +
-        '<canvas class="redo-canvas" id="r-' + qid + '"></canvas>' +
-        '<button class="clear-btn" style="position:relative;margin-top:4px;" onclick="clearCanvas(\'r-' + qid + '\')">✕ clear</button>' +
       '</div>';
     grid.appendChild(div);
   }
 }
-
+ 
 function buildAllWordProblems(gridId) {
   const grid = document.getElementById(gridId);
   // generate 3 of each type
@@ -283,7 +546,7 @@ function buildAllWordProblems(gridId) {
   }
   items.forEach((item, i) => renderWordCard(grid, item.q, 'w' + i, i + 1));
 }
-
+ 
 function renderWordCard(grid, q, qid, num) {
     const div = document.createElement('div');
     div.className = 'q wq';
@@ -291,25 +554,23 @@ function renderWordCard(grid, q, qid, num) {
     div.innerHTML =
       '<div class="q-num">' + num + '</div>' +
       '<div class="wq-text">' + q.text + '</div>' +
+      '<div class="canvas-label">✏️ Kira di sini (working area)</div>' +
       '<div class="canvas-wrap">' +
         '<canvas id="c-' + qid + '"></canvas>' +
         '<button class="clear-btn" onclick="clearCanvas(\'c-' + qid + '\')">✕</button>' +
       '</div>' +
+      '<div class="answer-label">✅ Tulis jawapan di sini (Apple Pencil auto-tukar)</div>' +
+      '<input type="text" class="answer-input" inputmode="numeric" pattern="[0-9]*" placeholder="?">' +
       '<div class="answer-row">' +
-        '<span class="correct-ans">Answer: ' + q.ans + '</span>' +
+        '<span class="correct-ans">Jawapan: ' + q.ans + '</span>' +
         '<div class="mark-buttons">' +
           '<button class="mark-btn tick" onclick="markQ(this, true)">✓</button>' +
           '<button class="mark-btn cross" onclick="markQ(this, false)">✗</button>' +
         '</div>' +
-      '</div>' +
-      '<div class="redo-wrap">' +
-        '<div class="redo-label">✏️ Write the correct answer:</div>' +
-        '<canvas class="redo-canvas" id="r-' + qid + '"></canvas>' +
-        '<button class="clear-btn" style="position:relative;margin-top:4px;" onclick="clearCanvas(\'r-' + qid + '\')">✕ clear</button>' +
       '</div>';
     grid.appendChild(div);
 }
-
+ 
 function setupCanvas(canvas) {
   const dpr = window.devicePixelRatio || 1;
   const rect = canvas.getBoundingClientRect();
@@ -352,45 +613,161 @@ function setupCanvas(canvas) {
   canvas.addEventListener('touchstart', e => e.preventDefault(), { passive: false });
   canvas.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
 }
-
+ 
 function clearCanvas(id) {
   const c = document.getElementById(id);
   if (!c) return;
   const ctx = c.getContext('2d');
   ctx.clearRect(0, 0, c.width, c.height);
 }
-
-function showAnswers() {
-  document.querySelectorAll('.q').forEach(q => q.classList.add('checked'));
-  setTimeout(() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }), 200);
-}
-
-function markQ(btn, isCorrect) {
-  const q = btn.closest('.q');
-  const tick = q.querySelector('.mark-btn.tick');
-  const cross = q.querySelector('.mark-btn.cross');
-  tick.classList.remove('active');
-  cross.classList.remove('active');
-  q.classList.remove('correct', 'wrong');
-  if (isCorrect) {
-    tick.classList.add('active'); q.classList.add('correct');
+ 
+let answersShown = false;
+const STORAGE_KEY = 'math_fun_history_v1';
+ 
+function toggleCheck() {
+  const btn = document.getElementById('checkBtn');
+  if (!answersShown) {
+    document.querySelectorAll('.q').forEach(q => {
+      const input = q.querySelector('.answer-input');
+      const correct = Number(q.dataset.answer);
+      const raw = (input.value || '').replace(/[^0-9-]/g, '').trim();
+      const given = raw === '' ? null : Number(raw);
+      q.classList.add('checked');
+      q.classList.remove('correct', 'wrong');
+      if (given !== null && !isNaN(given) && given === correct) {
+        q.classList.add('correct');
+      } else if (given !== null && !isNaN(given)) {
+        q.classList.add('wrong');
+      }
+    });
+    document.body.classList.remove('hide-answers');
+    answersShown = true;
+    btn.textContent = '🙈 Hide Answers';
+    updateScore();
+    saveSession();
+    renderHistory();
+    checkFinish();
   } else {
-    cross.classList.add('active'); q.classList.add('wrong');
-    const redo = q.querySelector('.redo-canvas');
-    if (redo && !redo.dataset.ready) {
-      setTimeout(() => { setupCanvas(redo); redo.dataset.ready = '1'; }, 50);
-    }
+    document.body.classList.add('hide-answers');
+    answersShown = false;
+    btn.textContent = '🔍 Check My Answers';
   }
-  updateScore();
-  checkFinish();
 }
-
+ 
+function loadHistory() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+  catch(e) { return []; }
+}
+function saveHistoryList(list) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); } catch(e) {}
+}
+ 
+function saveSession() {
+  const now = new Date();
+  const pad = (n) => String(n).padStart(2, '0');
+  const dateStr = now.getFullYear() + '-' + pad(now.getMonth()+1) + '-' + pad(now.getDate());
+  const timeStr = pad(now.getHours()) + ':' + pad(now.getMinutes());
+  const stats = { add:{c:0,t:0}, minus:{c:0,t:0}, times:{c:0,t:0}, divide:{c:0,t:0}, word:{c:0,t:0} };
+  const wrong = [];
+  document.querySelectorAll('.q').forEach(q => {
+    const section = q.closest('.section');
+    const type = section ? section.dataset.tab : 'unknown';
+    if (!stats[type]) return;
+    stats[type].t++;
+    if (q.classList.contains('correct')) stats[type].c++;
+    else if (q.classList.contains('wrong') || q.classList.contains('checked')) {
+      const qTextEl = q.querySelector('.q-text') || q.querySelector('.wq-text');
+      const input = q.querySelector('.answer-input');
+      const given = input ? input.value.trim() : '';
+      const isWrong = q.classList.contains('wrong');
+      if (isWrong || given === '') {
+        wrong.push({
+          type,
+          question: qTextEl ? qTextEl.textContent.trim() : '',
+          correctAnswer: q.dataset.answer,
+          givenAnswer: given || '(kosong)'
+        });
+      }
+    }
+  });
+  const totalCorrect = document.querySelectorAll('.q.correct').length;
+  const total = document.querySelectorAll('.q').length;
+  const session = { date: dateStr, time: timeStr, totalCorrect, total, stats, wrong };
+  const history = loadHistory();
+  const existingIdx = history.findIndex(s => s.date === dateStr);
+  if (existingIdx >= 0) history[existingIdx] = session;
+  else history.push(session);
+  history.sort((a, b) => b.date.localeCompare(a.date));
+  saveHistoryList(history);
+}
+ 
+function renderHistory() {
+  const container = document.getElementById('historyContainer');
+  if (!container) return;
+  const history = loadHistory();
+  if (history.length === 0) {
+    container.innerHTML = '<div class="empty-history">📋 Tiada rekod lagi.<br>Jawab soalan hari ini dan tekan <b>Check My Answers</b> untuk mula rekod audit trail.</div>';
+    return;
+  }
+  let html = '<p style="color:#555">Jumlah sesi tersimpan: <b>' + history.length + '</b></p>';
+  history.forEach(s => {
+    const pct = Math.round((s.totalCorrect / s.total) * 100);
+    const cls = pct >= 80 ? '' : (pct >= 60 ? 'mid' : 'low');
+    html += '<div class="history-item ' + cls + '">';
+    html += '<h3>📅 ' + s.date + ' (' + s.time + ') — Skor: ' + s.totalCorrect + ' / ' + s.total + ' (' + pct + '%)</h3>';
+    html += '<div class="stats-row">';
+    const labels = { add:'Tambah', minus:'Tolak', times:'Darab', divide:'Bahagi', word:'Soalan Ayat' };
+    ['add','minus','times','divide','word'].forEach(t => {
+      const st = s.stats[t] || {c:0,t:0};
+      if (st.t > 0) html += '<span class="stat-badge stat-' + t + '">' + labels[t] + ': ' + st.c + '/' + st.t + '</span>';
+    });
+    html += '</div>';
+    if (s.wrong && s.wrong.length > 0) {
+      html += '<details class="wrong-list"><summary>❌ ' + s.wrong.length + ' soalan tidak betul — klik untuk lihat</summary><ul>';
+      s.wrong.forEach(w => {
+        html += '<li><b>' + w.question + '</b> — jawapan betul: <b style="color:#2e7d32">' + w.correctAnswer + '</b>, ditulis: <span style="color:#c62828">' + w.givenAnswer + '</span></li>';
+      });
+      html += '</ul></details>';
+    }
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+ 
+function exportCSV() {
+  const history = loadHistory();
+  if (history.length === 0) { alert('Tiada rekod untuk export.'); return; }
+  let csv = 'Date,Time,Total Correct,Total,Percentage,Tambah,Tolak,Darab,Bahagi,Soalan Ayat,Wrong Questions\n';
+  history.forEach(s => {
+    const pct = Math.round((s.totalCorrect / s.total) * 100);
+    const wrongTxt = (s.wrong || []).map(w => w.question + ' [betul:' + w.correctAnswer + ' ditulis:' + w.givenAnswer + ']').join(' | ').replace(/"/g, '""');
+    const stat = (t) => (s.stats[t] ? s.stats[t].c + '/' + s.stats[t].t : '0/0');
+    csv += s.date + ',' + s.time + ',' + s.totalCorrect + ',' + s.total + ',' + pct + '%,';
+    csv += stat('add') + ',' + stat('minus') + ',' + stat('times') + ',' + stat('divide') + ',' + stat('word') + ',';
+    csv += '"' + wrongTxt + '"\n';
+  });
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'math_fun_history_' + new Date().toISOString().slice(0,10) + '.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+ 
+function clearHistory() {
+  if (confirm('Padam semua rekod audit trail? Ini tidak boleh undo.')) {
+    localStorage.removeItem(STORAGE_KEY);
+    renderHistory();
+  }
+}
+ 
 function updateScore() {
   const total = document.querySelectorAll('.q').length;
   const correct = document.querySelectorAll('.q.correct').length;
   document.getElementById('scoreBox').textContent = 'Score: ' + correct + ' / ' + total;
 }
-
+ 
 function checkFinish() {
   const total = document.querySelectorAll('.q').length;
   const marked = document.querySelectorAll('.q.correct, .q.wrong').length;
@@ -412,21 +789,53 @@ function checkFinish() {
     box.classList.add('show');
   }
 }
-
+ 
 function clearAll() {
   document.querySelectorAll('canvas').forEach(c => {
     const ctx = c.getContext('2d');
     ctx.clearRect(0, 0, c.width, c.height);
   });
+  document.querySelectorAll('.answer-input').forEach(inp => inp.value = '');
+  document.querySelectorAll('.q').forEach(q => q.classList.remove('checked','correct','wrong'));
+  answersShown = false;
+  const cb = document.getElementById('checkBtn');
+  if (cb) cb.textContent = '🔍 Check My Answers';
+  document.body.classList.remove('hide-answers');
+  updateScore();
 }
-
+ 
+function markQ(btn, isCorrect) {
+  const q = btn.closest('.q');
+  const tick = q.querySelector('.mark-btn.tick');
+  const cross = q.querySelector('.mark-btn.cross');
+  tick.classList.remove('active');
+  cross.classList.remove('active');
+  q.classList.remove('correct', 'wrong');
+  if (isCorrect) { tick.classList.add('active'); q.classList.add('correct'); }
+  else { cross.classList.add('active'); q.classList.add('wrong'); }
+  updateScore();
+  checkFinish();
+}
+ 
 function formatDate() {
   const days = ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat', 'Sabtu'];
   const months = ['Januari','Februari','Mac','April','Mei','Jun','Julai','Ogos','September','Oktober','November','Disember'];
   const d = new Date();
   return '📅 ' + days[d.getDay()] + ', ' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
 }
-
+ 
+function setActiveTab(name) {
+  document.querySelectorAll('.section').forEach(s => {
+    s.classList.toggle('active', s.dataset.tab === name);
+  });
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    const on = b.dataset.tab === name;
+    b.classList.remove('active-add','active-minus','active-times','active-divide','active-word','active-history');
+    if (on) b.classList.add('active-' + name);
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+ 
 window.addEventListener('load', () => {
   document.getElementById('dateBox').textContent = formatDate();
   buildSection('addGrid',    genAdd,    'a');
@@ -434,10 +843,17 @@ window.addEventListener('load', () => {
   buildSection('timesGrid',  genTimes,  'm');
   buildSection('divideGrid', genDivide, 'd');
   buildAllWordProblems('wAllGrid');
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => setActiveTab(btn.dataset.tab));
+  });
+  setActiveTab('add');
+  renderHistory();
   requestAnimationFrame(() => {
-    document.querySelectorAll('canvas:not(.redo-canvas)').forEach(setupCanvas);
+    document.querySelectorAll('canvas').forEach(setupCanvas);
   });
 });
 </script>
 </body>
 </html>
+ 
+
